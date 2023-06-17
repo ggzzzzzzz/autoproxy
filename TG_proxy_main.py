@@ -59,6 +59,10 @@ try_sub = []
 sub_n = -5
 #试用节点明文
 end_try = []
+proxy_servers = {
+   'http': 'http://192.168.1.2:10809',
+   'https': 'http://192.168.1.2:10809',
+   }
 
 #获取群组聊天中的HTTP链接
 def get_channel_http(url):
@@ -150,10 +154,6 @@ def write_document():
         random.shuffle(e_sub)
         print("e_sub")
         print(e_sub)
-        proxy_servers = {
-            'http': 'http://192.168.1.2:10809',
-            'https': 'http://192.168.1.2:10809',
-        }
 
         for e in e_sub:
             try:
@@ -167,7 +167,7 @@ def write_document():
         random.shuffle(try_sub)
         for t in try_sub:
             try:
-                res = requests.get(t)
+                res = requests.get(t,proxies=proxy_servers)
                 proxys=jiemi_base64(res.text)
                 end_try.extend(proxys.splitlines())
             except Exception as er:
@@ -303,7 +303,7 @@ def get_yaml():
     urls = ["https://api.dler.io//sub?target=clash&url=https://raw.githubusercontent.com/w1770946466/Auto_proxy/main/Long_term_subscription_try&insert=false&config=https://raw.githubusercontent.com/w1770946466/fetchProxy/main/config/provider/rxconfig.ini&emoji=true","https://api.dler.io//sub?target=clash&url=https://raw.githubusercontent.com/w1770946466/Auto_proxy/main/Long_term_subscription2&insert=false&config=https://raw.githubusercontent.com/w1770946466/fetchProxy/main/config/provider/rxconfig.ini&emoji=true", "https://api.dler.io//sub?target=clash&url=https://raw.githubusercontent.com/w1770946466/Auto_proxy/main/Long_term_subscription3&insert=false&config=https://raw.githubusercontent.com/w1770946466/fetchProxy/main/config/provider/rxconfig.ini&emoji=true"]
     n = 1
     for i in urls:
-        response = requests.get(i)
+        response = requests.get(i,proxies=proxy_servers)
         #print(response.text)
         file_L = open("Long_term_subscription" + str(n) +".yaml", 'w', encoding='utf-8')
         file_L.write(response.text)
@@ -381,10 +381,10 @@ def get_kkzui():
     # ========== 抓取 kkzui.com 的节点 ==========
     try:
         headers = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.53"}
-        res = requests.get("https://kkzui.com/jd?orderby=modified",headers=headers)
+        res = requests.get("https://kkzui.com/jd?orderby=modified",headers=headers,proxies=proxy_servers)
         article_url = re.search(r'<h2 class="item-heading"><a href="(https://kkzui.com/(.*?)\.html)"',res.text).groups()[0]
         print(article_url)
-        res = requests.get(article_url,headers=headers)
+        res = requests.get(article_url,headers=headers,proxies=proxy_servers)
         sub_url = re.search(r'<p><strong>这是v2订阅地址</strong>：(.*?)</p>',res.text).groups()[0]
         print(sub_url)
         e_sub.append(sub_url)
@@ -393,10 +393,10 @@ def get_kkzui():
         print("获取kkzui.com失败！")
     try:
         headers = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.53"}
-        res = requests.get("https://www.cfmem.com/search/label/free",headers=headers)
+        res = requests.get("https://www.cfmem.com/search/label/free",headers=headers,proxies=proxy_servers)
         article_url = re.search(r"https?://www\.cfmem\.com/\d{4}/\d{2}/\S+v2rayclash-vpn.html",res.text).group()
         #print(article_url)
-        res = requests.get(article_url,headers=headers)
+        res = requests.get(article_url,headers=headers,proxies=proxy_servers)
         sub_url = re.search(r'>v2ray订阅链接&#65306;(.*?)</span>',res.text).groups()[0]
         print(sub_url)
         try_sub.append(sub_url)
