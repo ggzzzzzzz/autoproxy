@@ -221,9 +221,9 @@ def write_document():
         file_L_try = open("Long_term_subscription_try", 'w', encoding='utf-8')
         file_L_try.write(plaintext_result_try)
         #写入README
-        #with open("README.md", 'r', encoding='utf-8') as f:
-        #    lines = f.readlines()
-        #    f.close()
+        with open("README.md", 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+            f.close()
         now_time = datetime.datetime.now()
         TimeDate = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         for index in range(len(lines)):
