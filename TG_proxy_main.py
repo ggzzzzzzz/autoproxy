@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # coding=utf-8
-from tqdm import tqdm
+from tqdm import tqdm  #progress bar
 import chardet
 import base64
 import requests
@@ -152,7 +152,7 @@ def write_document():
     else:
         #永久订阅
         random.shuffle(e_sub)
-        print("e_sub")
+        print("e_sub:")
         print(e_sub)
 
         for e in e_sub:
@@ -176,6 +176,9 @@ def write_document():
         #永久订阅去重
         end_bas64_A = list(set(end_bas64))
         print("去重完毕！！去除",len(end_bas64) - len(end_bas64_A),"个重复节点")
+
+        print('end_bas64_A')
+        print(end_bas64_A)
         #永久订阅去除多余换行符
         bas64 = '\n'.join(end_bas64_A).replace('\n\n', "\n").replace('\n\n', "\n").replace('\n\n', "\n")
         #试用去除多余换行符
@@ -196,20 +199,20 @@ def write_document():
         file.close()       
         
         #减少获取的个数
-        r = 1
-        length = len(end_bas64_A)  # 总长
-        m = 8  # 切分成多少份
-        step = int(length / m) + 1  # 每份的长度
-        for i in range(0, length, step):
-            print("起",i,"始",i+step)
-            zhengli = '\n'.join(end_bas64_A[i: i + step]).replace('\n\n', "\n").replace('\n\n', "\n").replace('\n\n', "\n")
-            #将获得的节点变成base64加密，为了长期订阅
-            obj = base64.b64encode(zhengli.encode())
-            plaintext_result = obj.decode()
-            #写入长期订阅
-            file_L = open("Long_term_subscription"+str(r), 'w', encoding='utf-8')
-            file_L.write(plaintext_result)
-            r += 1
+        #r = 1
+        #length = len(end_bas64_A)  # 总长
+        #m = 8  # 切分成多少份
+        #step = int(length / m) + 1  # 每份的长度
+        #for i in range(0, length, step):
+        #    print("起",i,"始",i+step)
+        #    zhengli = '\n'.join(end_bas64_A[i: i + step]).replace('\n\n', "\n").replace('\n\n', "\n").replace('\n\n', "\n")
+        #    #将获得的节点变成base64加密，为了长期订阅
+        #    obj = base64.b64encode(zhengli.encode())
+        #    plaintext_result = obj.decode()
+        #    #写入长期订阅
+        #    file_L = open("Long_term_subscription"+str(r), 'w', encoding='utf-8')
+        #    file_L.write(plaintext_result)
+        #    r += 1
         #写入总长期订阅
         obj = base64.b64encode(bas64.encode())
         plaintext_result = obj.decode()
@@ -220,6 +223,10 @@ def write_document():
         plaintext_result_try = obj_try.decode()
         file_L_try = open("Long_term_subscription_try", 'w', encoding='utf-8')
         file_L_try.write(plaintext_result_try)
+
+        # Modified
+        return
+
         #写入README
         with open("README.md", 'r', encoding='utf-8') as f:
             lines = f.readlines()
@@ -381,24 +388,12 @@ def get_kkzui():
     # ========== 抓取 kkzui.com 的节点 ==========
     try:
         headers = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.53"}
-        res = requests.get("https://kkzui.com/jd?orderby=modified",headers=headers,proxies=proxy_servers)
-        article_url = re.search(r'<h2 class="item-heading"><a href="(https://kkzui.com/(.*?)\.html)"',res.text).groups()[0]
-        print(article_url)
-        res = requests.get(article_url,headers=headers,proxies=proxy_servers)
-        sub_url = re.search(r'<p><strong>这是v2订阅地址</strong>：(.*?)</p>',res.text).groups()[0]
-        print(sub_url)
-        e_sub.append(sub_url)
-        print("获取kkzui.com完成！")
-    except:
-        print("获取kkzui.com失败！")
-    try:
-        headers = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.53"}
         res = requests.get("https://www.cfmem.com/search/label/free",headers=headers,proxies=proxy_servers)
         article_url = re.search(r"https?://www\.cfmem\.com/\d{4}/\d{2}/\S+v2rayclash-vpn.html",res.text).group()
-        #print(article_url)
         res = requests.get(article_url,headers=headers,proxies=proxy_servers)
         sub_url = re.search(r'>v2ray订阅链接&#65306;(.*?)</span>',res.text).groups()[0]
-        print(sub_url)
+        #print("print sub_url")
+        #print(sub_url)
         try_sub.append(sub_url)
         e_sub.append(sub_url)
     except Exception as e:
@@ -408,7 +403,7 @@ def get_kkzui():
 if __name__ == '__main__':
     #print("========== 开始获取机场订阅链接 ==========")
     #get_sub_url()
-    print("========== 开始获取kkzui.com订阅链接 ==========")
+    print("========== 开始获取订阅链接 ==========")
     get_kkzui()
     #print("========== 开始获取频道订阅链接 ==========")
     #for url in urls:
